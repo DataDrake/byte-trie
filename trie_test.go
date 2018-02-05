@@ -16,21 +16,27 @@
 
 package trie
 
-// Get retrieves the value of a node only if an exact match exists
-func (n *Node) Get(key []byte) ([]byte, bool) {
-	if len(key) == 0 {
-		if n.Value == nil {
-			return nil, false
-		} else {
-			return n.Value, true
-		}
+import "testing"
+
+// TestNewNode ensures that NewNode returns a valid Node
+func TestNewNode(t *testing.T) {
+	n := NewNode()
+	if n == nil {
+		t.Log("Node should not be nil")
+		t.FailNow()
 	}
-	if len(key) > 0 {
-		next := n.Children[key[0]]
-		if next == nil {
-			return nil, false
-		}
-		return next.Get(key[1:])
+	if len(n.Children) != 0 {
+		t.Errorf("Node should not have children, found: %d", len(n.Children))
 	}
-	return nil, false
+	if n.Value != nil {
+		t.Errorf("Value should be nil, found: '%v'", n.Value)
+	}
+}
+
+// TestIsLeaf ensures that a new node is a leaf
+func TestIsLeaf(t *testing.T) {
+	n := NewNode()
+	if !n.IsLeaf() {
+		t.Error("New Node should be a leaf")
+	}
 }

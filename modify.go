@@ -35,19 +35,17 @@ func (n *Node) Put(key, value []byte) {
 
 // Delete removes an existing value if found, removing parents if they are childless
 func (n *Node) Delete(key []byte) {
-	if len(key) == 1 {
-		delete(n.Children, key[0])
+	if len(key) == 0 {
+		n.Value = nil
 		return
 	}
-	if len(key) > 1 {
-		next := n.Children[key[0]]
-		if next == nil {
-			return
-		}
-		next.Delete(key[1:])
-		if len(next.Children) == 0 && next.Value == nil {
-			delete(n.Children, key[0])
-		}
+	next := n.Children[key[0]]
+	if next == nil {
+		return
+	}
+	next.Delete(key[1:])
+	if len(next.Children) == 0 && next.Value == nil {
+		delete(n.Children, key[0])
 	}
 	return
 }
