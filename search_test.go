@@ -17,37 +17,36 @@
 package trie
 
 import (
-	"testing"
 	"strconv"
+	"testing"
 )
 
 func getNum(b *testing.B, num int) {
-    b.StopTimer()
+	b.StopTimer()
 	n := NewNode()
+    var k []byte
 	for i := 0; i < num; i++ {
-		k := []byte(strconv.Itoa(i))
-		n.Put(k,k)
+		k = []byte(strconv.Itoa(i))
+		n.Put(k, k)
 	}
-    b.StartTimer()
+	b.StartTimer()
 	for i := 0; i < b.N; i++ {
-		b.StopTimer()
-		k := []byte(strconv.Itoa(i%num))
-		b.StartTimer()
+		k = []byte(strconv.Itoa(i % num))
 		n.Get(k)
 	}
 }
 
 // BenchmarkGet10000 finds the average search time for 10000 records
-func BenchmarkGet10000(b *testing.B){
-    getNum(b, 10000)
+func BenchmarkGet10000(b *testing.B) {
+	getNum(b, 10000)
 }
 
 // BenchmarkGet100000 finds the average search time for 100000 records
-func BenchmarkGet100000(b *testing.B){
-    getNum(b, 100000)
+func BenchmarkGet100000(b *testing.B) {
+	getNum(b, 100000)
 }
 
 // BenchmarkGet1000000 finds the average search time for 1000000 records
-func BenchmarkGet1000000(b *testing.B){
-    getNum(b, 1000000)
+func BenchmarkGet1000000(b *testing.B) {
+	getNum(b, 1000000)
 }

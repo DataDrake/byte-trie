@@ -24,10 +24,7 @@ type Node struct {
 
 // NewNode returns a pointer to an empty Node
 func NewNode() *Node {
-	return &Node{
-		Children: make(map[byte]*Node),
-		Value:    nil,
-	}
+	return &Node{make(map[byte]*Node), nil}
 }
 
 // IsLeaf checks if this Node is at the end of a branch

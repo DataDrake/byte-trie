@@ -18,8 +18,8 @@ package trie
 
 import (
 	"bytes"
-	"testing"
 	"strconv"
+	"testing"
 )
 
 // TestPut ensures that Put behaves as expected
@@ -199,10 +199,9 @@ func TestDelete(t *testing.T) {
 // BenchmarkPut finds the average insertion time of a number of records
 func BenchmarkPut(b *testing.B) {
 	n := NewNode()
+    var k []byte
 	for i := 0; i < b.N; i++ {
-		b.StopTimer()
-		k := []byte(strconv.Itoa(i))
-		b.StartTimer()
-		n.Put(k,k)
+		k = []byte(strconv.Itoa(i))
+		n.Put(k, k)
 	}
 }
