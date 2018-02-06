@@ -21,16 +21,12 @@ func (n *Node) Get(key []byte) ([]byte, bool) {
 	if len(key) == 0 {
 		if n.Value == nil {
 			return nil, false
-		} else {
-			return n.Value, true
 		}
+		return n.Value, true
 	}
-	if len(key) > 0 {
-		next := n.Children[key[0]]
-		if next == nil {
-			return nil, false
-		}
-		return next.Get(key[1:])
+	next := n.Children[key[0]]
+	if next == nil {
+		return nil, false
 	}
-	return nil, false
+	return next.Get(key[1:])
 }

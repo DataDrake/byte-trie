@@ -171,4 +171,26 @@ func TestDelete(t *testing.T) {
 		t.FailNow()
 	}
 
+	n.Delete(k3)
+	_, ok = n.Get(k1)
+	if ok {
+		t.Log("k1 should not exist")
+		t.FailNow()
+	}
+	_, ok = n.Get(k2)
+	if ok {
+		t.Log("k2 should not exist")
+		t.FailNow()
+	}
+	_, ok = n.Get(k3)
+	if ok {
+		t.Log("k3 should not exist")
+		t.FailNow()
+	}
+	_, ok = n.Get(k4)
+	if ok {
+		t.Log("k4 should not exist")
+		t.FailNow()
+	}
+
 }
