@@ -30,3 +30,27 @@ func (n *Node) Get(key []byte) ([]byte, bool) {
 	}
 	return next.Get(key[1:])
 }
+
+func (n *Node) realFuzzyGet(key []byte) ([]byte, []byte) {
+	if len(key) == 0 {
+		if n.Value == nil {
+			return nil, nil
+		}
+		return []byte{}, n.Value
+	}
+	next := n.Children[key[0]]
+	if next == nil {
+		return []byte{}, n.Value
+	}
+	k, v := next.realFuzzyGet(key[1:])
+	if k != nil {
+		k = append(key[0:1], k...)
+	}
+	return k, v
+}
+
+// FuzzyGet retrieves the value and key of the closest match found
+func (n *Node) FuzzyGet(key []byte) ([]byte, []byte, bool) {
+	k, v := n.realFuzzyGet(key)
+	return k, v, k != nil
+}

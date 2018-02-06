@@ -17,6 +17,7 @@
 package trie
 
 import (
+	"bytes"
 	"strconv"
 	"testing"
 )
@@ -24,14 +25,13 @@ import (
 func getNum(b *testing.B, num int) {
 	b.StopTimer()
 	n := NewNode()
-    var k []byte
 	for i := 0; i < num; i++ {
-		k = []byte(strconv.Itoa(i))
+		k := []byte(strconv.Itoa(i))
 		n.Put(k, k)
 	}
 	b.StartTimer()
 	for i := 0; i < b.N; i++ {
-		k = []byte(strconv.Itoa(i % num))
+		k := []byte(strconv.Itoa(i % num))
 		n.Get(k)
 	}
 }
@@ -50,3 +50,64 @@ func BenchmarkGet100000(b *testing.B) {
 func BenchmarkGet1000000(b *testing.B) {
 	getNum(b, 1000000)
 }
+
+// TestFuzzyGet makes sure that fuzzy searches work correctly
+func TestFuzzyGet(t *testing.T) {
+	n := NewNode()
+	k1 := []byte("a")
+	v1 := []byte("1")
+	n.Put(k1, v1)
+	k, v, ok := n.FuzzyGet(k1)
+	if !ok {
+		t.Log("Should have been ok")
+		t.FailNow()
+	}
+	if !bytes.Equal(k1, k) {
+		t.Errorf("Should have been '%s', found: '%s'", string(k1), string(k))
+	}
+	if !bytes.Equal(v1, v) {
+		t.Errorf("Should have been '%s', found: '%s'", string(v1), string(v))
+	}
+	k2 := []byte("ab")
+	k, v, ok = n.FuzzyGet(k2)
+	if !ok {
+		t.Log("Should have been ok")
+		t.FailNow()
+	}
+	if !bytes.Equal(k1, k) {
+		t.Errorf("Should have been '%s', found: '%s'", string(k1), string(k))
+	}
+	if !bytes.Equal(v1, v) {
+		t.Errorf("Should have been '%s', found: '%s'", string(v1), string(v))
+	}
+}
+
+func fuzzyGetNum(b *testing.B, num int) {
+	b.StopTimer()
+	n := NewNode()
+	for i := 0; i < num; i++ {
+		k := []byte(strconv.Itoa(i))
+		n.Put(k, k)
+	}
+	b.StartTimer()
+	for i := 0; i < b.N; i++ {
+		k := []byte(strconv.Itoa(i))
+		n.FuzzyGet(k)
+	}
+}
+
+// BenchmarkFuzzyGet10000 finds the average fuzzy search time for 10000 records
+func BenchmarkFuzzyGet10000(b *testing.B) {
+	fuzzyGetNum(b, 10000)
+}
+
+// BenchmarkFuzzyGet100000 finds the average fuzzy search time for 100000 records
+func BenchmarkFuzzyGet100000(b *testing.B) {
+	fuzzyGetNum(b, 100000)
+}
+
+// BenchmarkFuzzyGet1000000 finds the average fuzzy search time for 1000000 records
+func BenchmarkFuzzyGet1000000(b *testing.B) {
+	fuzzyGetNum(b, 1000000)
+}
+
