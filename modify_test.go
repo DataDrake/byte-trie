@@ -19,6 +19,7 @@ package trie
 import (
 	"bytes"
 	"testing"
+	"strconv"
 )
 
 // TestPut ensures that Put behaves as expected
@@ -193,4 +194,15 @@ func TestDelete(t *testing.T) {
 		t.FailNow()
 	}
 
+}
+
+// BenchmarkPut finds the average insertion time of a number of records
+func BenchmarkPut(b *testing.B) {
+	n := NewNode()
+	for i := 0; i < b.N; i++ {
+		b.StopTimer()
+		k := []byte(strconv.Itoa(i))
+		b.StartTimer()
+		n.Put(k,k)
+	}
 }
