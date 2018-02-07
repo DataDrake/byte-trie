@@ -110,4 +110,3 @@ func BenchmarkFuzzyGet100000(b *testing.B) {
 func BenchmarkFuzzyGet1000000(b *testing.B) {
 	fuzzyGetNum(b, 1000000)
 }
-

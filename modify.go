@@ -22,14 +22,12 @@ func (n *Node) Put(key, value []byte) {
 		n.Value = value
 		return
 	}
-	if len(key) > 0 {
-		next := n.Children[key[0]]
-		if next == nil {
-			next = NewNode()
-			n.Children[key[0]] = next
-		}
-		next.Put(key[1:], value)
+	next := n.Children[key[0]]
+	if next == nil {
+		next = NewNode()
+		n.Children[key[0]] = next
 	}
+	next.Put(key[1:], value)
 	return
 }
 
